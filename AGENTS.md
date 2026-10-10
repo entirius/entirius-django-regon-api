@@ -1,11 +1,8 @@
 # AGENTS.md
 
-REGON/GUS lookup Django module for Volkanos — NIP/REGON search against Polish government
+REGON/GUS lookup Django module of Entirius — NIP/REGON search against Polish government
 registries; distribution `entirius-django-regon-api`, Django app `django_regon_api`.
 No models, no migrations — a stateless API/service layer with Django-cache memoization.
-
-**Tech:** Python >=3.11, Django >=4.0, zeep (SOAP BIR client), marshmallow-dataclass DTOs,
-`entirius-py-gov-rejestr-wl-sdk` (VAT registry), `entirius-django-utils` (API helpers)
 
 ## Commands
 
@@ -14,7 +11,7 @@ No models, no migrations — a stateless API/service layer with Django-cache mem
 | `make install` | sync dependencies (uv, incl. extras) |
 | `make check` | lint + format-check (ruff) |
 | `make fix` | auto-fix lint + format |
-| `make test` | test suite (pytest) |
+| `make test` | test suite (pytest): offline smoke suite — imports, URL routing, no live registry calls |
 
 ## Conventions
 
@@ -25,7 +22,7 @@ No models, no migrations — a stateless API/service layer with Django-cache mem
 - Never rename the Django app `django_regon_api` — the app_label is a public contract.
 - Default: do not commit — git is the user's call.
 
-## Commit Message Format
+### Commit Message Format
 
 **NEVER add `Co-Authored-By: Claude ...` (or any other Claude/Anthropic attribution) to commit messages.**
 
@@ -41,7 +38,7 @@ src/django_regon_api/
 ├── services/
 │   └── regon_client.py     # BIR SOAP client (zeep) + field mapping to the gov-registry shape
 ├── dto/regon_params.py     # marshmallow-dataclass DTOs
-├── output.py               # merges BIR + VAT-registry (gov_rejestr_wl_sdk) lookups
+├── output.py               # cached lookups: get_nip_from_gov (VAT registry), get_nip_from_regon_api (BIR)
 ├── management/commands/    # search_by_nip, search_by_regon (CLI probes)
 ├── settings.py             # BIR_* / GOV_REJESTR_WL_* / cache settings (host overrides)
 ├── urls.py                 # {API_BASE_URL}/regon/<version>/ → nip/<nip>/, regon/<regon>/
@@ -57,7 +54,13 @@ Two upstream registries:
 
 Responses are cached via the Django cache (`GET_REGON_DATA_CACHE_*` settings).
 
-## Settings Reference
+| Topic | Where |
+|---|---|
+| BIR service notes | `docs/README.md`, `docs/api/bir1.md` |
+| Log codes | `docs/log-codes.md` |
+| Settings and defaults | `src/django_regon_api/settings.py` |
+
+## Settings
 
 | Setting | Default | Description |
 |---------|---------|-------------|
@@ -68,11 +71,3 @@ Responses are cached via the Django cache (`GET_REGON_DATA_CACHE_*` settings).
 | `BIR_VERSIONS` | `"bir1.1"` | BIR service version (`bir1` / `bir1.1`) |
 | `GET_REGON_DATA_CACHE_PREFIX` | `django_regon_api_get_data` | cache key prefix |
 | `GET_REGON_DATA_CACHE_TIMEOUT` / `GET_GOV_DATA_CACHE_TIMEOUT` | 1 h | cache TTLs |
-
-## Testing
-
-```bash
-uv run pytest
-```
-
-Offline smoke suite — imports, URL routing, no live registry calls.

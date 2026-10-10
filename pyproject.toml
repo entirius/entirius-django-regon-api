@@ -1,7 +1,21 @@
 [project]
 name = "entirius-django-regon-api"
 version = "3.0.0"
-description = "REGON/GUS lookup Django module for Volkanos — NIP/REGON search against Polish government registries"
+description = "Polish company registry lookup for Entirius: NIP and REGON search in the VAT registry, NIP lookup in REGON"
+keywords = ["django", "regon", "nip", "gus", "vat", "ecommerce", "entirius"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Django",
+    "Framework :: Django :: 5.2",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business",
+]
 authors = [{ name = "Entirius" }]
 maintainers = [
     { name = "Piotr Brzozowski", email = "piotrb@entirius.com" },
@@ -28,7 +42,11 @@ dev  = ["ruff", "pre-commit"]
 test = ["pytest", "pytest-django"]
 
 [project.urls]
+Homepage = "https://docs.entirius.com/"
+Documentation = "https://github.com/entirius/entirius-django-regon-api/tree/develop/docs"
 Repository = "https://github.com/entirius/entirius-django-regon-api"
+Changelog = "https://github.com/entirius/entirius-django-regon-api/releases"
+Issues = "https://github.com/entirius/entirius-django-regon-api/issues"
 
 [build-system]
 requires = ["hatchling"]
